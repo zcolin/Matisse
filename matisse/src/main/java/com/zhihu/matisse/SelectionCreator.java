@@ -295,12 +295,15 @@ public final class SelectionCreator {
         restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         thumbnailScale(0.85f);
         imageEngine(new GlideEngine());
-        Activity activity = mMatisse.getActivity();
 
+        return createIntent();
+    }
+
+    public Intent createIntent() {
+        Activity activity = mMatisse.getActivity();
         if (activity == null) {
             return null;
         }
-
         return new Intent(activity, MatisseActivity.class);
     }
 }
