@@ -282,5 +282,14 @@ public final class SelectionCreator {
             activity.startActivityForResult(intent, requestCode);
         }
     }
+    
+    public Intent createIntent(){
+        Activity activity = mMatisse.getActivity();
+        if (activity == null) {
+            return null;
+        }
+
+        return new Intent(activity, MatisseActivity.class);
+    }
 
 }
