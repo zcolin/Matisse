@@ -290,9 +290,13 @@ public final class SelectionCreator {
     }
 
     public Intent createDefaultIntent() {
+        Activity activity = mMatisse.getActivity();
+        if (activity == null) {
+            return null;
+        }
+
         capture(true);
-        captureStrategy(new CaptureStrategy(true, getClass().getPackage()
-                                                            .getName() + ".matisse_fileprovider"));
+        captureStrategy(new CaptureStrategy(true, activity.getPackageName() + ".matisse_fileprovider"));
         restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         thumbnailScale(0.85f);
         imageEngine(new GlideEngine());
