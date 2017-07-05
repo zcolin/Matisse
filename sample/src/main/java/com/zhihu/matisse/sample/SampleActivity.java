@@ -32,8 +32,6 @@ import android.widget.Toast;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.engine.impl.PicassoEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
@@ -64,59 +62,57 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(final View v) {
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Observer<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                     .subscribe(new Observer<Boolean>() {
+                         @Override
+                         public void onSubscribe(Disposable d) {
 
-                    }
+                         }
 
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            switch (v.getId()) {
-                                case R.id.zhihu:
-                                    Matisse.from(SampleActivity.this)
-                                            .choose(MimeType.ofAll(), false)
-                                            .countable(true)
-                                            .capture(true)
-                                            .captureStrategy(
-                                                    new CaptureStrategy(true, "com.zhihu.matisse.sample.fileprovider"))
-                                            .maxSelectable(9)
-                                            .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
-                                            .gridExpectedSize(
-                                                    getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
-                                            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                                            .thumbnailScale(0.85f)
-                                            .imageEngine(new GlideEngine())
-                                            .forResult(REQUEST_CODE_CHOOSE);
-                                    break;
-                                case R.id.dracula:
-                                    Matisse.from(SampleActivity.this)
-                                            .choose(MimeType.ofImage())
-                                            .theme(R.style.Matisse_Dracula)
-                                            .countable(false)
-                                            .maxSelectable(9)
-                                            .imageEngine(new PicassoEngine())
-                                            .forResult(REQUEST_CODE_CHOOSE);
-                                    break;
-                            }
-                            mAdapter.setData(null, null);
-                        } else {
-                            Toast.makeText(SampleActivity.this, R.string.permission_request_denied, Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    }
+                         @Override
+                         public void onNext(Boolean aBoolean) {
+                             if (aBoolean) {
+                                 switch (v.getId()) {
+                                     case R.id.zhihu:
+                                         Matisse.from(SampleActivity.this)
+                                                .choose(MimeType.ofAll(), false)
+                                                .countable(true)
+                                                .capture(true)
+                                                .captureStrategy(
+                                                        new CaptureStrategy(true, "com.zhihu.matisse.matisse_fileprovider"))
+                                                .maxSelectable(9)
+                                                .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+                                                .gridExpectedSize(
+                                                        getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                                                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                                                .thumbnailScale(0.85f)
+                                                .forResult(REQUEST_CODE_CHOOSE);
+                                         break;
+                                     case R.id.dracula:
+                                         Matisse.from(SampleActivity.this)
+                                                .choose(MimeType.ofImage())
+                                                .theme(R.style.Matisse_Dracula)
+                                                .countable(false)
+                                                .maxSelectable(9)
+                                                .forResult(REQUEST_CODE_CHOOSE);
+                                         break;
+                                 }
+                                 mAdapter.setData(null, null);
+                             } else {
+                                 Toast.makeText(SampleActivity.this, R.string.permission_request_denied, Toast.LENGTH_LONG)
+                                      .show();
+                             }
+                         }
 
-                    @Override
-                    public void onError(Throwable e) {
+                         @Override
+                         public void onError(Throwable e) {
 
-                    }
+                         }
 
-                    @Override
-                    public void onComplete() {
+                         @Override
+                         public void onComplete() {
 
-                    }
-                });
+                         }
+                     });
     }
 
     @Override
@@ -129,7 +125,7 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
 
     private static class UriAdapter extends RecyclerView.Adapter<UriAdapter.UriViewHolder> {
 
-        private List<Uri> mUris;
+        private List<Uri>    mUris;
         private List<String> mPaths;
 
         void setData(List<Uri> uris, List<String> paths) {
@@ -141,12 +137,14 @@ public class SampleActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         public UriViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new UriViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.uri_item, parent, false));
+                    LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.uri_item, parent, false));
         }
 
         @Override
         public void onBindViewHolder(UriViewHolder holder, int position) {
-            holder.mUri.setText(mUris.get(position).toString());
+            holder.mUri.setText(mUris.get(position)
+                                     .toString());
             holder.mPath.setText(mPaths.get(position));
 
             holder.mUri.setAlpha(position % 2 == 0 ? 1.0f : 0.54f);

@@ -18,6 +18,7 @@ package com.zhihu.matisse;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
 import com.zhihu.matisse.engine.ImageEngine;
+import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import com.zhihu.matisse.internal.entity.SelectionSpec;
@@ -58,7 +60,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT;
  */
 @SuppressWarnings("unused")
 public final class SelectionCreator {
-    private final Matisse mMatisse;
+    private final Matisse       mMatisse;
     private final SelectionSpec mSelectionSpec;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -103,6 +105,7 @@ public final class SelectionCreator {
      *
      * @param showSingleMediaType whether to show only one media type, either images or videos.
      * @return {@link SelectionCreator} for fluent API.
+     *
      * @see SelectionSpec#onlyShowImages()
      * @see SelectionSpec#onlyShowVideos()
      */
@@ -162,7 +165,8 @@ public final class SelectionCreator {
         if (mSelectionSpec.filters == null) {
             mSelectionSpec.filters = new ArrayList<>();
         }
-        if (filter == null) throw new IllegalArgumentException("filter cannot be null");
+        if (filter == null)
+            throw new IllegalArgumentException("filter cannot be null");
         mSelectionSpec.filters.add(filter);
         return this;
     }
@@ -198,6 +202,7 @@ public final class SelectionCreator {
      * @param orientation An orientation constant as used in {@link ScreenOrientation}.
      *                    Default value is {@link android.content.pm.ActivityInfo#SCREEN_ORIENTATION_PORTRAIT}.
      * @return {@link SelectionCreator} for fluent API.
+     *
      * @see Activity#setRequestedOrientation(int)
      */
     public SelectionCreator restrictOrientation(@ScreenOrientation int orientation) {
@@ -214,7 +219,8 @@ public final class SelectionCreator {
      * @return {@link SelectionCreator} for fluent API.
      */
     public SelectionCreator spanCount(int spanCount) {
-        if (spanCount < 1) throw new IllegalArgumentException("spanCount cannot be less than 1");
+        if (spanCount < 1)
+            throw new IllegalArgumentException("spanCount cannot be less than 1");
         mSelectionSpec.spanCount = spanCount;
         return this;
     }
@@ -282,14 +288,19 @@ public final class SelectionCreator {
             activity.startActivityForResult(intent, requestCode);
         }
     }
-    
-    public Intent createIntent(){
+
+    public Intent createDefaultIntent() {
+        capture(true);
+        captureStrategy(new CaptureStrategy(true, "com.zhihu.matisse.matisse_fileprovider"));
+        restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        thumbnailScale(0.85f);
+        imageEngine(new GlideEngine());
         Activity activity = mMatisse.getActivity();
+
         if (activity == null) {
             return null;
         }
 
         return new Intent(activity, MatisseActivity.class);
     }
-
 }
