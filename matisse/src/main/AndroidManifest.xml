@@ -27,7 +27,7 @@
         <activity android:name="com.zhihu.matisse.internal.ui.SelectedPreviewActivity"/>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name=".MatisseProvider"
             android:authorities="${applicationId}.matisse_fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
