@@ -291,10 +291,13 @@ public final class SelectionCreator {
 
     public Intent createDefaultIntent() {
         capture(true);
-        captureStrategy(new CaptureStrategy(true, "com.zhihu.matisse.matisse_fileprovider"));
+        captureStrategy(new CaptureStrategy(true, getClass().getPackage()
+                                                            .getName() + ".matisse_fileprovider"));
         restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         thumbnailScale(0.85f);
         imageEngine(new GlideEngine());
+        theme(R.style.Matisse_Dracula);
+        countable(false);
 
         return createIntent();
     }

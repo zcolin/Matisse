@@ -28,7 +28,7 @@
 
         <provider
             android:name=".MatisseProvider"
-            android:authorities="com.zhihu.matisse.matisse_fileprovider"
+            android:authorities="${applicationId}.matisse_fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
