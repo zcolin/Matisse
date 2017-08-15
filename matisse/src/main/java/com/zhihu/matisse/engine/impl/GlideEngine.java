@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.request.RequestOptions;
 import com.zhihu.matisse.engine.ImageEngine;
 
 /**
@@ -29,47 +30,59 @@ import com.zhihu.matisse.engine.ImageEngine;
  */
 
 public class GlideEngine implements ImageEngine {
+    private RequestOptions thumbRequestOptions;
+    private RequestOptions imageRequestOptions;
+
+    public RequestOptions getThumbRequestOption(Drawable placeHolder, int resize) {
+        if (thumbRequestOptions == null) {
+            thumbRequestOptions = new RequestOptions().placeholder(placeHolder)
+                                                      .override(resize, resize)
+                                                      .centerCrop();
+        }
+        return thumbRequestOptions;
+    }
+
+    public RequestOptions getImageRequestOption(int resizeX, int resizeY) {
+        if (thumbRequestOptions == null) {
+            thumbRequestOptions = new RequestOptions().override(resizeX, resizeY)
+                                                      .priority(Priority.HIGH);
+        }
+        return thumbRequestOptions;
+    }
 
     @Override
     public void loadThumbnail(Context context, int resize, Drawable placeholder, ImageView imageView, Uri uri) {
         Glide.with(context)
-                .load(uri)
-                .asBitmap()  // some .jpeg files are actually gif
-                .placeholder(placeholder)
-                .override(resize, resize)
-                .centerCrop()
-                .into(imageView);
+             .asBitmap()
+             .load(uri)
+             .apply(getThumbRequestOption(placeholder, resize))
+             .into(imageView);
     }
 
     @Override
-    public void loadGifThumbnail(Context context, int resize, Drawable placeholder, ImageView imageView,
-                                 Uri uri) {
+    public void loadGifThumbnail(Context context, int resize, Drawable placeholder, ImageView imageView, Uri uri) {
         Glide.with(context)
-                .load(uri)
-                .asBitmap()
-                .placeholder(placeholder)
-                .override(resize, resize)
-                .centerCrop()
-                .into(imageView);
+             .asBitmap()
+             .load(uri)
+             .apply(getThumbRequestOption(placeholder, resize))
+             .into(imageView);
     }
 
     @Override
     public void loadImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
         Glide.with(context)
-                .load(uri)
-                .override(resizeX, resizeY)
-                .priority(Priority.HIGH)
-                .into(imageView);
+             .load(uri)
+             .apply(getImageRequestOption(resizeX, resizeY))
+             .into(imageView);
     }
 
     @Override
     public void loadGifImage(Context context, int resizeX, int resizeY, ImageView imageView, Uri uri) {
         Glide.with(context)
-                .load(uri)
-                .asGif()
-                .override(resizeX, resizeY)
-                .priority(Priority.HIGH)
-                .into(imageView);
+             .asGif()
+             .load(uri)
+             .apply(getImageRequestOption(resizeX, resizeY))
+             .into(imageView);
     }
 
     @Override
