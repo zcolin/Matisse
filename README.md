@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.zhihu.android:matisse:0.4.3'
+     compile 'com.github.zcolin:Matisse:latest.release'
 }
 ```
 
