@@ -102,11 +102,12 @@ public class Item implements Parcelable {
     }
 
     public boolean isImage() {
-        return mimeType.equals(MimeType.JPEG.toString())
+        return mimeType != null &&( 
+                   mimeType.equals(MimeType.JPEG.toString())
                 || mimeType.equals(MimeType.PNG.toString())
                 || mimeType.equals(MimeType.GIF.toString())
                 || mimeType.equals(MimeType.BMP.toString())
-                || mimeType.equals(MimeType.WEBP.toString());
+                || mimeType.equals(MimeType.WEBP.toString()));
     }
 
     public boolean isGif() {

@@ -55,6 +55,18 @@ So if you are targeting Android 6.0+, you need to handle runtime permission requ
 Start `MatisseActivity` from current `Activity` or `Fragment`:
 
 ```java
+Matisse.from(MainActivity.this)
+        .choose(MimeType.allOf())
+        .countable(true)
+        .maxSelectable(9)
+        .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+        .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+        .thumbnailScale(0.85f)
+        .imageEngine(new GlideEngine())
+        .forResult(REQUEST_CODE_CHOOSE);
+```
+```如果使用了ZFrame
 Intent intent = Matisse.from(context)
                        .choose(MimeType.ofImage(), true)
                        .showSingleMediaType(true)
@@ -82,6 +94,22 @@ And Also you can define your own theme as you wish.
 
 #### Receive Result
 In `onActivityResult()` callback of the starting `Activity` or `Fragment`:
+
+```java
+List<Uri> mSelected;
+
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
+        mSelected = Matisse.obtainResult(data);
+        Log.d("Matisse", "mSelected: " + mSelected);
+    }
+}
+```
+```如果使用了ZFrame
+不需要在写以上
+```
 
 #### More
 Find more details about Matisse in [wiki](https://github.com/zhihu/Matisse/wiki).
