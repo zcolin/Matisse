@@ -43,11 +43,11 @@ public class GlideEngine implements ImageEngine {
     }
 
     public RequestOptions getImageRequestOption(int resizeX, int resizeY) {
-        if (thumbRequestOptions == null) {
-            thumbRequestOptions = new RequestOptions().override(resizeX, resizeY)
+        if (imageRequestOptions == null) {
+            imageRequestOptions = new RequestOptions().override(resizeX, resizeY)
                                                       .priority(Priority.HIGH);
         }
-        return thumbRequestOptions;
+        return imageRequestOptions;
     }
 
     @Override

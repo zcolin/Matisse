@@ -29,10 +29,8 @@ import android.widget.Toast;
 import com.zhihu.matisse.R;
 import com.zhihu.matisse.internal.entity.Item;
 import com.zhihu.matisse.internal.entity.SelectionSpec;
+import com.zhihu.matisse.internal.ui.widget.ZoomImageView;
 import com.zhihu.matisse.internal.utils.PhotoMetadataUtils;
-
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class PreviewItemFragment extends Fragment {
 
@@ -70,7 +68,8 @@ public class PreviewItemFragment extends Fragment {
                     try {
                         startActivity(intent);
                     } catch (ActivityNotFoundException e) {
-                        Toast.makeText(getContext(), R.string.error_no_video_activity, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.error_no_video_activity, Toast.LENGTH_SHORT)
+                             .show();
                     }
                 }
             });
@@ -78,22 +77,18 @@ public class PreviewItemFragment extends Fragment {
             videoPlayButton.setVisibility(View.GONE);
         }
 
-        ImageViewTouch image = (ImageViewTouch) view.findViewById(R.id.image_view);
-        image.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-
+        ZoomImageView imageView = (ZoomImageView) view.findViewById(R.id.image_view);
         Point size = PhotoMetadataUtils.getBitmapSize(item.getContentUri(), getActivity());
         if (item.isGif()) {
-            SelectionSpec.getInstance().imageEngine.loadGifImage(getContext(), size.x, size.y, image,
-                    item.getContentUri());
+            SelectionSpec.getInstance().imageEngine.loadGifImage(getContext(), size.x, size.y, imageView, item.getContentUri());
         } else {
-            SelectionSpec.getInstance().imageEngine.loadImage(getContext(), size.x, size.y, image,
-                    item.getContentUri());
+            SelectionSpec.getInstance().imageEngine.loadImage(getContext(), size.x, size.y, imageView, item.getContentUri());
         }
     }
 
     public void resetView() {
-        if (getView() != null) {
-            ((ImageViewTouch) getView().findViewById(R.id.image_view)).resetMatrix();
-        }
+//        if (getView() != null) {
+//            ((ZoomImageView) getView().findViewById(R.id.image_view)).resetMatrix();
+//        }
     }
 }
