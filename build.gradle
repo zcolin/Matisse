@@ -20,16 +20,31 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
+        google()
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+//project级别的全局统一配置,在module的build.gradle中引用如:compileSdkVersion rootProject.ext.compileSdkVersion
+ext {
+    compileSdkVersion = 26
+    buildToolsVersion = "26.0.2"
+    supprotVersion = "26.0.2"
+    minSdkVersion = 15
+    targetSdkVersion = 24
+
+    versionCode = 1
+    versionName = "1.0"
+
+    release_path = '../.release_apk'
 }
