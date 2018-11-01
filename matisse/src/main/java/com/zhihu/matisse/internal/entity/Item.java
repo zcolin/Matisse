@@ -102,28 +102,15 @@ public class Item implements Parcelable {
     }
 
     public boolean isImage() {
-        return mimeType != null &&( 
-                   mimeType.equals(MimeType.JPEG.toString())
-                || mimeType.equals(MimeType.PNG.toString())
-                || mimeType.equals(MimeType.GIF.toString())
-                || mimeType.equals(MimeType.BMP.toString())
-                || mimeType.equals(MimeType.WEBP.toString()));
+        return MimeType.isImage(mimeType);
     }
 
     public boolean isGif() {
-        return mimeType.equals(MimeType.GIF.toString());
+        return MimeType.isGif(mimeType);
     }
 
     public boolean isVideo() {
-        return mimeType.equals(MimeType.MPEG.toString())
-                || mimeType.equals(MimeType.MP4.toString())
-                || mimeType.equals(MimeType.QUICKTIME.toString())
-                || mimeType.equals(MimeType.THREEGPP.toString())
-                || mimeType.equals(MimeType.THREEGPP2.toString())
-                || mimeType.equals(MimeType.MKV.toString())
-                || mimeType.equals(MimeType.WEBM.toString())
-                || mimeType.equals(MimeType.TS.toString())
-                || mimeType.equals(MimeType.AVI.toString());
+        return MimeType.isVideo(mimeType);
     }
 
     @Override
@@ -146,7 +133,9 @@ public class Item implements Parcelable {
     public int hashCode() {
         int result = 1;
         result = 31 * result + Long.valueOf(id).hashCode();
-        result = 31 * result + mimeType.hashCode();
+        if (mimeType != null) {
+            result = 31 * result + mimeType.hashCode();
+        }
         result = 31 * result + uri.hashCode();
         result = 31 * result + Long.valueOf(size).hashCode();
         result = 31 * result + Long.valueOf(duration).hashCode();

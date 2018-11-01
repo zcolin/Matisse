@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.zhihu.matisse.internal.entity;
 
-public class CaptureStrategy {
+package com.zhihu.matisse.listener;
 
-    public final boolean isPublic;
-    public final String authority;
-    public final String directory;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
-    public CaptureStrategy(boolean isPublic, String authority) {
-        this(isPublic, authority, null);
-    }
+import java.util.List;
 
-    public CaptureStrategy(boolean isPublic, String authority, String directory) {
-        this.isPublic = isPublic;
-        this.authority = authority;
-        this.directory = directory;
-    }
+public interface OnSelectedListener {
+    /**
+     * @param uriList the selected item {@link Uri} list.
+     * @param pathList the selected item file path list.
+     */
+    void onSelected(@NonNull List<Uri> uriList, @NonNull List<String> pathList);
 }

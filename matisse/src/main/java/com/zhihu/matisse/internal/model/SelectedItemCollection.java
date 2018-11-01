@@ -16,6 +16,7 @@
 package com.zhihu.matisse.internal.model;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -35,26 +36,26 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class SelectedItemCollection {
 
-    public static final String STATE_SELECTION       = "state_selection";
+    public static final String STATE_SELECTION = "state_selection";
     public static final String STATE_COLLECTION_TYPE = "state_collection_type";
     /**
      * Empty collection
      */
-    public static final int    COLLECTION_UNDEFINED  = 0x00;
+    public static final int COLLECTION_UNDEFINED = 0x00;
     /**
      * Collection only with images
      */
-    public static final int    COLLECTION_IMAGE      = 0x01;
+    public static final int COLLECTION_IMAGE = 0x01;
     /**
      * Collection only with videos
      */
-    public static final int    COLLECTION_VIDEO      = 0x01 << 1;
+    public static final int COLLECTION_VIDEO = 0x01 << 1;
     /**
      * Collection with images and videos.
      */
-    public static final int    COLLECTION_MIXED      = COLLECTION_IMAGE | COLLECTION_VIDEO;
-    private final Context   mContext;
-    private       Set<Item> mItems;
+    public static final int COLLECTION_MIXED = COLLECTION_IMAGE | COLLECTION_VIDEO;
+    private final Context mContext;
+    private Set<Item> mItems;
     private int mCollectionType = COLLECTION_UNDEFINED;
 
     public SelectedItemCollection(Context context) {
@@ -167,10 +168,26 @@ public class SelectedItemCollection {
 
     public IncapableCause isAcceptable(Item item) {
         if (maxSelectableReached()) {
-            int maxSelectable = SelectionSpec.getInstance().maxSelectable;
-            String cause = mContext.getString(
-                    R.string.error_over_count,
-                    maxSelectable);
+            int maxSelectable = currentMaxSelectable();
+            String cause;
+
+            try {
+                cause = mContext.getResources().getQuantityString(
+                        R.plurals.error_over_count,
+                        maxSelectable,
+                        maxSelectable
+                );
+            } catch (Resources.NotFoundException e) {
+                cause = mContext.getString(
+                        R.string.error_over_count,
+                        maxSelectable
+                );
+            } catch (NoClassDefFoundError e) {
+                cause = mContext.getString(
+                        R.string.error_over_count,
+                        maxSelectable
+                );
+            }
 
             return new IncapableCause(cause);
         } else if (typeConflict(item)) {
@@ -181,7 +198,21 @@ public class SelectedItemCollection {
     }
 
     public boolean maxSelectableReached() {
-        return mItems.size() == SelectionSpec.getInstance().maxSelectable;
+        return mItems.size() == currentMaxSelectable();
+    }
+
+    // depends
+    private int currentMaxSelectable() {
+        SelectionSpec spec = SelectionSpec.getInstance();
+        if (spec.maxSelectable > 0) {
+            return spec.maxSelectable;
+        } else if (mCollectionType == COLLECTION_IMAGE) {
+            return spec.maxImageSelectable;
+        } else if (mCollectionType == COLLECTION_VIDEO) {
+            return spec.maxVideoSelectable;
+        } else {
+            return spec.maxSelectable;
+        }
     }
 
     public int getCollectionType() {
@@ -192,10 +223,8 @@ public class SelectedItemCollection {
         boolean hasImage = false;
         boolean hasVideo = false;
         for (Item i : mItems) {
-            if (i.isImage() && !hasImage)
-                hasImage = true;
-            if (i.isVideo() && !hasVideo)
-                hasVideo = true;
+            if (i.isImage() && !hasImage) hasImage = true;
+            if (i.isVideo() && !hasVideo) hasVideo = true;
         }
         if (hasImage && hasVideo) {
             mCollectionType = COLLECTION_MIXED;
