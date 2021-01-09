@@ -23,9 +23,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:你的版本号"
-    implementation "com.android.support:recyclerview-v7:你的版本号"
-    implementation 'com.github.bumptech.glide:glide:4.0.0'
+    compileOnly 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.github.zcolin:Matisse:latest.release'
 }
 ```

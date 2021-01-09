@@ -8,7 +8,7 @@
  */
 package com.zhihu.matisse;
 
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 
 /**
  * Entry for Matisse's media selection.
